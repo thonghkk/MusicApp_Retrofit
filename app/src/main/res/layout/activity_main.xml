@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:weightSum="100"
+    tools:context=".MainActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="15"
+        android:orientation="vertical"
+        android:padding="10dp">
+
+        <TextView
+            android:id="@+id/txtNameSong"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/extView.text.name_song"
+            android:textSize="30sp"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:textStyle="normal|bold" />
+
+        <TextView
+            android:id="@+id/txtNameSinger"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/extView.text.name_singer"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:textSize="20sp" />
+
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/imgSong"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="45"
+        android:src="@drawable/img" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="10"
+        android:orientation="horizontal"
+        android:layout_marginEnd="10dp"
+        android:layout_marginStart="10dp"
+        android:weightSum="10">
+
+        <TextView
+            android:id="@+id/txtTimeStart"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+             tools:ignore="NestedWeights" />
+
+        <SeekBar
+            android:id="@+id/mSeekBar"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="8"
+            tools:ignore="NestedWeights" />
+
+        <TextView
+            android:id="@+id/txtTimeEnd"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+             tools:ignore="NestedWeights" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="30"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:layout_marginStart="30dp"
+        android:layout_marginEnd="30dp"
+        android:weightSum="9">
+
+        <ImageView
+            android:id="@+id/mBackSong"
+            android:layout_width="0dp"
+            android:layout_height="75dp"
+            android:layout_weight="3"
+            android:src="@drawable/ic_skip_back"
+            tools:ignore="NestedWeights" />
+
+        <ImageView
+            android:id="@+id/mPlayer"
+            android:layout_width="0dp"
+            android:layout_height="75dp"
+            android:layout_weight="3"
+            android:src="@drawable/ic_pause"
+            tools:ignore="NestedWeights" />
+
+        <ImageView
+            android:id="@+id/mNextSong"
+            android:layout_width="0dp"
+            android:layout_height="75dp"
+            android:layout_weight="3"
+            android:src="@drawable/ic_skip_next"
+            tools:ignore="NestedWeights" />
+    </LinearLayout>
+</LinearLayout>
