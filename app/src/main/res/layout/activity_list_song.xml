@@ -4,87 +4,106 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".listsong.ListSongActivity">
+    android:orientation="vertical"
+    android:weightSum="100"
+    tools:context=".ui.listsong.ListSongActivity">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/mRecycleView"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-
-    <RelativeLayout
+    <LinearLayout
         android:id="@+id/mLayoutBottom"
         android:layout_width="match_parent"
-        android:layout_height="64dp"
+        android:layout_height="65dp"
         android:layout_alignParentBottom="true"
-        android:background="@color/white_x"
-        android:padding="10dp"
-        android:visibility="gone">
+        android:orientation="vertical"
+        android:visibility="gone"
+        android:weightSum="20">
 
-        <ImageView
-            android:id="@+id/imgSong"
-            android:layout_width="35dp"
-            android:layout_height="35dp"
-            android:layout_centerVertical="true"
-            android:scaleType="centerCrop"
-            android:src="@drawable/ic_launcher_background" />
-
-        <LinearLayout
-            android:id="@+id/l1"
+        <ProgressBar
+            android:id="@+id/progressBar"
+            style="?android:attr/progressBarStyleHorizontal"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginStart="10dp"
-            android:layout_marginEnd="10dp"
-            android:layout_toStartOf="@id/skip_back"
-            android:layout_toEndOf="@id/imgSong"
-            android:orientation="vertical">
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:progressTint="@color/teal_200"
+            android:secondaryProgressTint="@color/design_default_color_primary" />
 
-            <TextView
-                android:id="@+id/txtNameSong"
+        <RelativeLayout
+            android:id="@+id/mLayoutBottom2"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="19"
+            android:background="@color/white_x"
+            android:visibility="visible">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/imgSong"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="5dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/ic_launcher_background" />
+
+            <LinearLayout
+                android:id="@+id/l1"
                 android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_toStartOf="@id/skip_back"
+                android:layout_toEndOf="@id/imgSong"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/txtNameSong"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:text="Remember me"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/txtNameSinger"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:text="Reunion" />
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/skip_back"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:ellipsize="end"
-                android:maxLines="1"
-                android:text="Remember me"
-                android:textStyle="bold" />
+                android:layout_marginEnd="10dp"
+                android:layout_toStartOf="@id/imgPlayOrPause"
+                android:src="@drawable/ic_skip_back" />
 
-            <TextView
-                android:id="@+id/txtNameSinger"
-                android:layout_width="match_parent"
+            <ImageView
+                android:id="@+id/imgPlayOrPause"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:ellipsize="end"
-                android:maxLines="1"
-                android:text="Reunion"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="10dp"
+                android:layout_toStartOf="@id/imgClear"
+                android:src="@drawable/ic_play" />
 
-                />
-        </LinearLayout>
+            <ImageView
+                android:id="@+id/imgClear"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:src="@drawable/ic_skip_next" />
 
-        <ImageView
-            android:id="@+id/skip_back"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_marginEnd="10dp"
-            android:layout_toStartOf="@id/imgPlayOrPause"
-            android:src="@drawable/ic_skip_back" />
+        </RelativeLayout>
+    </LinearLayout>
 
-        <ImageView
-            android:id="@+id/imgPlayOrPause"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_centerVertical="true"
-            android:layout_marginEnd="10dp"
-            android:layout_toStartOf="@id/imgClear"
-            android:src="@drawable/ic_play" />
-
-        <ImageView
-            android:id="@+id/imgClear"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_alignParentEnd="true"
-            android:layout_centerVertical="true"
-            android:src="@drawable/ic_skip_next" />
-
-    </RelativeLayout>
 
 </RelativeLayout>

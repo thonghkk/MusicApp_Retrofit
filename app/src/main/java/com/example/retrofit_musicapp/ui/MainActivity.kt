@@ -1,25 +1,23 @@
-package com.example.retrofit_musicapp
+ package com.example.retrofit_musicapp.ui
 
 import android.annotation.SuppressLint
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import android.media.AudioAttributes
-import android.media.MediaPlayer
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.os.Message
 import android.util.Log
-import android.view.View
-import android.widget.Button
+import android.view.animation.Animation
+import android.view.animation.AnimationUtils
 import android.widget.ImageView
 import android.widget.SeekBar
 import android.widget.TextView
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.bumptech.glide.Glide
-import com.bumptech.glide.request.RequestOptions
+import com.example.retrofit_musicapp.R
 import com.example.retrofit_musicapp.common.ServiceKey
 import com.example.retrofit_musicapp.common.ServiceKey.Companion.ACTION_PAUSE
 import com.example.retrofit_musicapp.common.ServiceKey.Companion.ACTION_RESUME
@@ -28,7 +26,7 @@ import com.example.retrofit_musicapp.common.ServiceKey.Companion.OBJECT_SONG
 import com.example.retrofit_musicapp.common.ServiceKey.Companion.SEND_DATA_TO_ACTIVITY
 import com.example.retrofit_musicapp.model.Song
 import com.example.retrofit_musicapp.service.MyService
-import java.util.*
+import com.example.retrofit_musicapp.service.MyService.Companion.mediaPlayer
 
 class MainActivity : AppCompatActivity() {
 
@@ -40,8 +38,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var txtNameSinger: TextView
     private lateinit var mSeekBar: SeekBar
 
-    private var mediaPlayer: MediaPlayer? = null
-    private var isPlaying = true
+    private var isPlaying = false
 
     private val mReceivers = (object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
@@ -51,7 +48,7 @@ class MainActivity : AppCompatActivity() {
             isPlaying = bundle?.getBoolean(ServiceKey.STATUS_PLAYER)!!
             val actionMusic = bundle.getInt(ServiceKey.ACTION_MUSIC)
             handleLayoutMusic(actionMusic)
-         }
+        }
     })
 
 
@@ -79,19 +76,16 @@ class MainActivity : AppCompatActivity() {
         isPlaying = bundle?.getBoolean(ServiceKey.STATUS_PLAYER)!!
         val actionMusic = bundle.getInt(ServiceKey.ACTION_MUSIC)
 
+
         //catch click event of user
         mPlayer.setOnClickListener {
-            if (!isPlaying) {
-                mPlayer.setImageResource(R.drawable.ic_pause)
-                mediaPlayer?.pause()
-                isPlaying = true
-                sendActionToService(ACTION_PAUSE)
-            } else {
-                mPlayer.setImageResource(R.drawable.ic_play)
-                mediaPlayer?.start()
-                isPlaying = false
+            if (isPlaying) {
                 sendActionToService(ACTION_RESUME)
-            }
+                isPlaying = false
+             } else {
+                sendActionToService(ACTION_PAUSE)
+                isPlaying = true
+             }
         }
         handleLayoutMusic(actionMusic)
 
@@ -151,7 +145,7 @@ class MainActivity : AppCompatActivity() {
             if (remainingTime == "0:00") {
                 mPlayer.setImageResource(R.drawable.ic_pause)
                 mediaPlayer?.pause()
-                isPlaying = true
+                sendActionToService(ACTION_PAUSE)
             }
         }
     }
@@ -168,10 +162,21 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun handleLayoutMusic(action: Int) {
-        when (action) {
-            ACTION_START -> setStatusButtonPlayOrPause()
-            ACTION_PAUSE -> setStatusButtonPlayOrPause()
-            ACTION_RESUME -> setStatusButtonPlayOrPause()
+        val myAnim = AnimationUtils.loadAnimation(this, R.anim.rotate_indefinitely)
+        imgSong.startAnimation(myAnim)
+         when (action) {
+            ACTION_START -> {
+                setStatusButtonPlayOrPause()
+             }
+            ACTION_PAUSE -> {
+                setStatusButtonPlayOrPause()
+                myAnim.cancel()
+                myAnim.cancel()
+            }
+            ACTION_RESUME -> {
+                setStatusButtonPlayOrPause()
+                myAnim.start()
+            }
         }
     }
 
@@ -188,5 +193,10 @@ class MainActivity : AppCompatActivity() {
         intent.putExtra(ServiceKey.ACTION_MUSIC_SERVICE, action)
         startService(intent)
     }
+
+//    override fun onBackPressed() {
+//        super.onBackPressed()
+//        startActivity(Intent(this,ListSongActivity::class.java))
+//    }
 
 }

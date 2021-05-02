@@ -1,6 +1,5 @@
 package com.example.retrofit_musicapp.service
 
-import android.app.NotificationManager
 import android.app.PendingIntent
 import android.app.Service
 import android.content.Context
@@ -17,27 +16,31 @@ import android.widget.RemoteViews
 import androidx.core.app.NotificationCompat
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.bumptech.glide.Glide
-import com.example.retrofit_musicapp.MainActivity
+import com.bumptech.glide.request.target.CustomTarget
+import com.bumptech.glide.request.transition.Transition
+import com.example.retrofit_musicapp.ui.MainActivity
 import com.example.retrofit_musicapp.R
-import com.example.retrofit_musicapp.common.ServiceKey.Companion.ACTION_CLEAR
 import com.example.retrofit_musicapp.common.ServiceKey.Companion.ACTION_MUSIC
 import com.example.retrofit_musicapp.common.ServiceKey.Companion.ACTION_MUSIC_SERVICE
+import com.example.retrofit_musicapp.common.ServiceKey.Companion.ACTION_NEXT_MUSIC
 import com.example.retrofit_musicapp.common.ServiceKey.Companion.ACTION_PAUSE
+import com.example.retrofit_musicapp.common.ServiceKey.Companion.ACTION_PREV_MUSIC
 import com.example.retrofit_musicapp.common.ServiceKey.Companion.ACTION_RESUME
 import com.example.retrofit_musicapp.common.ServiceKey.Companion.ACTION_START
 import com.example.retrofit_musicapp.common.ServiceKey.Companion.CHANNEL_ID
-import com.example.retrofit_musicapp.common.ServiceKey.Companion.MEDIA
 import com.example.retrofit_musicapp.common.ServiceKey.Companion.OBJECT_SONG
 import com.example.retrofit_musicapp.common.ServiceKey.Companion.SEND_DATA_TO_ACTIVITY
-import com.example.retrofit_musicapp.common.ServiceKey.Companion.SEND_DATA_TO_ACTIVITY_MAIN
 import com.example.retrofit_musicapp.common.ServiceKey.Companion.STATUS_PLAYER
-import com.example.retrofit_musicapp.listsong.ListSongActivity
 import com.example.retrofit_musicapp.model.Song
-import kotlin.math.log
+import java.lang.Exception
+import java.net.HttpURLConnection
+import java.net.URL
 
-class MyService : Service() {
+open class MyService : Service() {
+    companion object {
+        var mediaPlayer: MediaPlayer? = null
+    }
 
-    private var mediaPlayer: MediaPlayer? = null
     private var isPlaying = true
     private var mSong: Song? = null
 
@@ -55,12 +58,13 @@ class MyService : Service() {
         val song: Song? = bundle?.get(OBJECT_SONG) as Song?
 
         val actionMusic: Int = intent?.getIntExtra(ACTION_MUSIC_SERVICE, 0)!!
+
         handleActionMusic(actionMusic)
         Log.d("action", "onStartCommand: $actionMusic")
 
         if (song != null) {
             mSong = song
-            sendNotification(mSong,actionMusic)
+            sendNotification(mSong, actionMusic)
             startMusic(mSong)
         }
 
@@ -76,6 +80,7 @@ class MyService : Service() {
                     .build()
             )
             setDataSource(song?.urlSong)
+            prepare()
             start()
         }
         isPlaying = true
@@ -94,7 +99,7 @@ class MyService : Service() {
         if (isPlaying) {
             mediaPlayer?.pause()
             isPlaying = false
-            sendNotification(mSong,action)
+            sendNotification(mSong, action)
             sendActionToActivity(ACTION_PAUSE)
         }
     }
@@ -103,12 +108,12 @@ class MyService : Service() {
         if (!isPlaying) {
             mediaPlayer?.start()
             isPlaying = true
-            sendNotification(mSong,action)
+            sendNotification(mSong, action)
             sendActionToActivity(ACTION_RESUME)
         }
     }
 
-    private fun sendNotification(song: Song?,action: Int) {
+    private fun sendNotification(song: Song?, action: Int) {
         val intent = Intent(this, MainActivity::class.java)
         val bundle = Bundle().apply {
             putSerializable(OBJECT_SONG, mSong)
@@ -119,12 +124,25 @@ class MyService : Service() {
 
         val pendingIntent =
             PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
-
         //mapping all properties
         val remoteView = RemoteViews(packageName, R.layout.item_notification_music)
         remoteView.setTextViewText(R.id.txtNameSong, song?.nameSound!!)
         remoteView.setTextViewText(R.id.txtNameSinger, song.singer)
         remoteView.setImageViewResource(R.id.imgPlayOrPause, R.drawable.ic_play)
+        Log.d("url", "error ${song.urlImage}")
+        val url = song.urlImage
+
+        Glide.with(this).asBitmap().load(url)
+            .into(object : CustomTarget<Bitmap>() {
+                override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
+                    remoteView.setImageViewBitmap(R.id.imgSongNotification, resource)
+
+                }
+
+                override fun onLoadCleared(placeholder: Drawable?) {
+
+                }
+            })
 
         //catch event action
         if (!isPlaying) {
@@ -141,6 +159,16 @@ class MyService : Service() {
             remoteView.setImageViewResource(R.id.imgPlayOrPause, R.drawable.ic_play)
         }
 
+
+        //catch event next or back music
+        remoteView.setOnClickPendingIntent(
+            R.id.skip_prev,
+            getPendingIntent(this, ACTION_PREV_MUSIC)
+        )
+        remoteView.setOnClickPendingIntent(
+            R.id.skip_next,
+            getPendingIntent(this, ACTION_NEXT_MUSIC)
+        )
 
         val notification = NotificationCompat.Builder(this, CHANNEL_ID)
             .setSmallIcon(R.drawable.ic_notification)
@@ -169,9 +197,24 @@ class MyService : Service() {
             putBoolean(STATUS_PLAYER, isPlaying)
             putInt(ACTION_MUSIC, action)
         }
-         intent.putExtras(bundle)
+        intent.putExtras(bundle)
         LocalBroadcastManager.getInstance(this).sendBroadcast(intent)
         Log.d("show", "handleLayoutMusic: begin_111")
 
     }
+
+    private fun getBitmapFromURL(src: String): Bitmap? {
+        try {
+            val url = URL(src)
+            val connection = url.openConnection() as HttpURLConnection
+            connection.doInput = true
+            connection.connect()
+            val input = connection.inputStream
+            return BitmapFactory.decodeStream(input)
+        } catch (e: Exception) {
+            return null
+        }
+    }
+
+
 }

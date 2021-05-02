@@ -14,6 +14,9 @@ class ServiceKey {
         const val STATUS_PLAYER = "STATUS_PLAYER"
         const val SEND_DATA_TO_ACTIVITY = "SEND_DATA_TO_ACTIVITY"
         const val SEND_DATA_TO_ACTIVITY_MAIN = "SEND_DATA_TO_ACTIVITY_MAIN"
-        const val MEDIA = "MEDIA"
+        const val ID_SONG = "ID_SONG"
+        const val ACTION_PREV_MUSIC = 5
+        const val ACTION_NEXT_MUSIC = 6
+
     }
 }

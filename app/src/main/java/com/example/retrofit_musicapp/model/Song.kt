@@ -5,11 +5,13 @@ import java.io.Serializable
 
 class Song(
     @SerializedName("tenBaiHat")
-    val nameSound:String,
+    val nameSound: String,
     @SerializedName("hinhBaiHat")
-    val urlImage:String,
+    val urlImage: String,
     @SerializedName("caSy")
-    val singer:String,
+    val singer: String,
     @SerializedName("linkBaiHat")
-    val urlSong:String
-): Serializable
+    val urlSong: String,
+    @SerializedName("idBaiHat")
+    var idSong: String
+) : Serializable

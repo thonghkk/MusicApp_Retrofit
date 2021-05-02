@@ -1,4 +1,4 @@
-package com.example.retrofit_musicapp.listsong
+package com.example.retrofit_musicapp.ui.listsong
 
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
@@ -12,7 +12,7 @@ import retrofit2.Response
 class ListSongViewModel:ViewModel() {
 
     var gallerySongLiveData: MutableLiveData<List<Song>>
-    val data: MutableLiveData<List<Song>>
+    private val data: MutableLiveData<List<Song>>
 
     init {
         gallerySongLiveData = fetch()

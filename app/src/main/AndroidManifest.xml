@@ -15,7 +15,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Retrofit_MusicApp">
         <activity
-            android:name=".listsong.ListSongActivity"
+            android:name="com.example.retrofit_musicapp.ui.listsong.ListSongActivity"
             android:theme="@style/NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -24,7 +24,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".MainActivity"
+            android:name=".ui.MainActivity"
             android:theme="@style/NoActionBar">
         </activity>
         <service android:name=".service.MyService"/>
