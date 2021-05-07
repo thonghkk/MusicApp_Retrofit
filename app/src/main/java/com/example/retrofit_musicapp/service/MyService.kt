@@ -34,6 +34,7 @@ import com.example.retrofit_musicapp.common.ServiceKey.Companion.OBJECT_SONG
 import com.example.retrofit_musicapp.common.ServiceKey.Companion.SEND_DATA_TO_ACTIVITY
 import com.example.retrofit_musicapp.common.ServiceKey.Companion.STATUS_PLAYER
 import com.example.retrofit_musicapp.model.Song
+import java.io.InputStream
 import java.lang.Exception
 import java.net.HttpURLConnection
 import java.net.URL
@@ -42,7 +43,6 @@ open class MyService : Service() {
     companion object {
         var mediaPlayer: MediaPlayer? = null
     }
-
     private var isPlaying = true
     private var mSong: Song? = null
 
@@ -216,15 +216,25 @@ open class MyService : Service() {
     }
 
     private fun getBitmapFromURL(src: String): Bitmap? {
-        try {
+        return try {
             val url = URL(src)
-            val connection = url.openConnection() as HttpURLConnection
+            val connection:HttpURLConnection  = url.openConnection() as HttpURLConnection
             connection.doInput = true
             connection.connect()
-            val input = connection.inputStream
-            return BitmapFactory.decodeStream(input)
+            val input: InputStream = connection.inputStream
+            BitmapFactory.decodeStream(input)
         } catch (e: Exception) {
-            return null
+            Log.d("url image", "notificationChannel: ${ e.printStackTrace()}")
+            null
+        }
+    }
+
+    private fun convertUrlToBitmap(src:String):Bitmap?{
+        return try {
+            val url:URL = URL(src)
+            BitmapFactory.decodeStream(url.openConnection().getInputStream())
+        }catch (e:Exception){
+            null
         }
     }
 
@@ -241,7 +251,9 @@ open class MyService : Service() {
             PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
 
         val mediaSessionCompat = MediaSessionCompat(this, "tag")
-        val bitmap = getBitmapFromURL(song?.urlImage!!)
+
+        val bitmap = convertUrlToBitmap("https://data.chiasenhac.com/data/cover/86/85720.jpg")
+        Log.d("url image", "notificationChannel: ${song?.urlImage!!} and $bitmap")
 
         //create notification
         val notificationBuilder = NotificationCompat.Builder(this, CHANNEL_ID)

@@ -5,16 +5,15 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.os.Message
 import android.util.Log
-import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.widget.ImageView
 import android.widget.SeekBar
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.bumptech.glide.Glide
 import com.example.retrofit_musicapp.R
@@ -30,6 +29,7 @@ import com.example.retrofit_musicapp.common.ServiceKey.Companion.STATUS_PLAYER
 import com.example.retrofit_musicapp.model.Song
 import com.example.retrofit_musicapp.service.MyService
 import com.example.retrofit_musicapp.service.MyService.Companion.mediaPlayer
+import com.example.retrofit_musicapp.ui.list_song.ListSongActivity
 
 class PlayMusicActivity : AppCompatActivity() {
 
@@ -110,7 +110,7 @@ class PlayMusicActivity : AppCompatActivity() {
             }
         })
 
-        Thread(Runnable {
+        Thread {
             while (mediaPlayer != null) {
                 try {
                     val msg = Message()
@@ -121,7 +121,7 @@ class PlayMusicActivity : AppCompatActivity() {
                     e.printStackTrace()
                 }
             }
-        }).start()
+        }.start()
     }
 
     @SuppressLint("HandlerLeak")
@@ -180,13 +180,14 @@ class PlayMusicActivity : AppCompatActivity() {
             ACTION_CLEAR -> {
                 mediaPlayer?.release()
                 mediaPlayer = null
-                myAnim.cancel()
-                setTime("0:00", "0:00")
+//                myAnim.cancel()
+//                setTime("0:00", "0:00")
 //                val intent = Intent(this, MyService::class.java)
 //                val bundle = Bundle()
 //                bundle.putSerializable(OBJECT_SONG, song)
 //                intent.putExtras(bundle)
 //                startService(intent)
+               onBackPressed()
             }
         }
     }
@@ -204,4 +205,5 @@ class PlayMusicActivity : AppCompatActivity() {
         intent.putExtra(ServiceKey.ACTION_MUSIC_SERVICE, action)
         startService(intent)
     }
+
 }

@@ -73,7 +73,7 @@ class ListSongActivity : AppCompatActivity() {
         mRecycleView.layoutManager = LinearLayoutManager(this)
         mListSongViewModel = ViewModelProvider(this).get(ListSongViewModel::class.java)
 
-        mListSongViewModel.gallerySongLiveData.observe(this, Observer { song ->
+        mListSongViewModel.gallerySongLiveData.observe(this, { song ->
             mRecycleView.adapter = ListSongAdapter(song)
         })
     }
@@ -116,7 +116,7 @@ class ListSongActivity : AppCompatActivity() {
         mediaPlayer = null
         val intent = Intent(this, MyService::class.java)
         val bundle = Bundle()
-        mListSongViewModel.gallerySongLiveData.observe(this, Observer { song ->
+        mListSongViewModel.gallerySongLiveData.observe(this, { song ->
             for (i in song) {
                 if (i.idSong == mSong?.idSong) {
                     Log.d("nameNext", "prevMusic: ${i.nameSound}")

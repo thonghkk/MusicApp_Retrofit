@@ -5,7 +5,6 @@ import android.content.Context
 import android.content.Intent
 import com.example.retrofit_musicapp.common.ServiceKey.Companion.ACTION_MUSIC
 import com.example.retrofit_musicapp.common.ServiceKey.Companion.ACTION_MUSIC_SERVICE
-import com.example.retrofit_musicapp.common.ServiceKey.Companion.ID_SONG
 
 class MyReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context?, intent: Intent?) {

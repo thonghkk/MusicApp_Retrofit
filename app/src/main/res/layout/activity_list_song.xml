@@ -83,7 +83,8 @@
                 android:layout_height="match_parent"
                 android:layout_marginEnd="10dp"
                 android:layout_toStartOf="@id/imgPlayOrPause"
-                android:src="@drawable/ic_skip_back" />
+                android:src="@drawable/ic_skip_back"
+                android:contentDescription="TODO" />
 
             <ImageView
                 android:id="@+id/imgPlayOrPause"
@@ -92,7 +93,8 @@
                 android:layout_centerVertical="true"
                 android:layout_marginEnd="10dp"
                 android:layout_toStartOf="@id/imgClear"
-                android:src="@drawable/ic_play" />
+                android:src="@drawable/ic_play"
+                android:contentDescription="TODO" />
 
             <ImageView
                 android:id="@+id/imgClear"
@@ -100,7 +102,8 @@
                 android:layout_height="match_parent"
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
-                android:src="@drawable/ic_skip_next" />
+                android:src="@drawable/ic_skip_next"
+                android:contentDescription="TODO" />
 
         </RelativeLayout>
     </LinearLayout>
