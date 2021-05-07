@@ -3,8 +3,7 @@
     package="com.example.retrofit_musicapp">
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
-
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
     <application
         android:name=".common.CheckVersion"
@@ -15,7 +14,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Retrofit_MusicApp">
         <activity
-            android:name="com.example.retrofit_musicapp.ui.listsong.ListSongActivity"
+            android:name="com.example.retrofit_musicapp.ui.list_song.ListSongActivity"
             android:theme="@style/NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -24,12 +23,10 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.MainActivity"
-            android:theme="@style/NoActionBar">
-        </activity>
-        <service android:name=".service.MyService"/>
-        <receiver android:name=".service.MyReceiver"/>
+            android:name=".ui.PlayMusicActivity"
+            android:theme="@style/NoActionBar" />
 
+        <service android:name=".service.MyService" />
+        <receiver android:name=".service.MyReceiver" />
     </application>
-
 </manifest>
