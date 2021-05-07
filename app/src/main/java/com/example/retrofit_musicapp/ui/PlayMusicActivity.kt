@@ -1,4 +1,4 @@
- package com.example.retrofit_musicapp.ui
+package com.example.retrofit_musicapp.ui
 
 import android.annotation.SuppressLint
 import android.content.BroadcastReceiver
@@ -19,16 +19,19 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.bumptech.glide.Glide
 import com.example.retrofit_musicapp.R
 import com.example.retrofit_musicapp.common.ServiceKey
+import com.example.retrofit_musicapp.common.ServiceKey.Companion.ACTION_CLEAR
+import com.example.retrofit_musicapp.common.ServiceKey.Companion.ACTION_MUSIC
 import com.example.retrofit_musicapp.common.ServiceKey.Companion.ACTION_PAUSE
 import com.example.retrofit_musicapp.common.ServiceKey.Companion.ACTION_RESUME
 import com.example.retrofit_musicapp.common.ServiceKey.Companion.ACTION_START
 import com.example.retrofit_musicapp.common.ServiceKey.Companion.OBJECT_SONG
 import com.example.retrofit_musicapp.common.ServiceKey.Companion.SEND_DATA_TO_ACTIVITY
+import com.example.retrofit_musicapp.common.ServiceKey.Companion.STATUS_PLAYER
 import com.example.retrofit_musicapp.model.Song
 import com.example.retrofit_musicapp.service.MyService
 import com.example.retrofit_musicapp.service.MyService.Companion.mediaPlayer
 
-class MainActivity : AppCompatActivity() {
+class PlayMusicActivity : AppCompatActivity() {
 
     private lateinit var mPlayer: ImageView
     private lateinit var imgSong: ImageView
@@ -38,23 +41,22 @@ class MainActivity : AppCompatActivity() {
     private lateinit var txtNameSinger: TextView
     private lateinit var mSeekBar: SeekBar
 
-    private var isPlaying = false
+    private var isPlaying = true
 
     private val mReceivers = (object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
             val bundle: Bundle? = intent?.extras
             val mSong = bundle?.get(OBJECT_SONG) as Song?
             Log.d("song", "onReceive: ${mSong?.nameSound}")
-            isPlaying = bundle?.getBoolean(ServiceKey.STATUS_PLAYER)!!
-            val actionMusic = bundle.getInt(ServiceKey.ACTION_MUSIC)
-            handleLayoutMusic(actionMusic)
+            isPlaying = bundle?.getBoolean(STATUS_PLAYER)!!
+            val actionMusic = bundle.getInt(ACTION_MUSIC)
+            handleLayoutMusic(actionMusic, mSong)
         }
     })
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.activity_play_music)
 
         mPlayer = findViewById(R.id.mPlayer)
         mSeekBar = findViewById(R.id.mSeekBar)
@@ -73,22 +75,19 @@ class MainActivity : AppCompatActivity() {
         txtNameSinger.text = song?.singer
         txtNameSong.text = song?.nameSound
         Glide.with(this).load(song?.urlImage).into(imgSong)
-        isPlaying = bundle?.getBoolean(ServiceKey.STATUS_PLAYER)!!
-        val actionMusic = bundle.getInt(ServiceKey.ACTION_MUSIC)
+        isPlaying = bundle?.getBoolean(STATUS_PLAYER)!!
+        val actionMusic = bundle.getInt(ACTION_MUSIC)
 
-
+        setStatusButtonPlayOrPause()
         //catch click event of user
         mPlayer.setOnClickListener {
             if (isPlaying) {
-                sendActionToService(ACTION_RESUME)
-                isPlaying = false
-             } else {
                 sendActionToService(ACTION_PAUSE)
-                isPlaying = true
-             }
+            } else {
+                sendActionToService(ACTION_RESUME)
+            }
         }
-        handleLayoutMusic(actionMusic)
-
+        handleLayoutMusic(actionMusic, song)
         //custom time
         positionBar()
     }
@@ -129,15 +128,12 @@ class MainActivity : AppCompatActivity() {
     var handler = object : Handler() {
         override fun handleMessage(msg: Message) {
             val currentPosition = msg.what
-
             //update position bar
             mSeekBar.progress = currentPosition
-
             //update labels
             val elapsedTime = createTimeLabel(currentPosition)
-            txtTimeStart.text = elapsedTime
             val remainingTime = createTimeLabel(mediaPlayer!!.duration - currentPosition)
-            txtTimeEnd.text = remainingTime
+            setTime(elapsedTime, remainingTime)
             Log.d(
                 "TAG",
                 "handleMessage: ${mediaPlayer!!.duration} and $remainingTime and ${msg.what}"
@@ -148,6 +144,11 @@ class MainActivity : AppCompatActivity() {
                 sendActionToService(ACTION_PAUSE)
             }
         }
+    }
+
+    fun setTime(elapsedTime: String, remainingTime: String) {
+        txtTimeStart.text = elapsedTime
+        txtTimeEnd.text = remainingTime
     }
 
     fun createTimeLabel(time: Int): String {
@@ -161,21 +162,31 @@ class MainActivity : AppCompatActivity() {
         return timeLabel
     }
 
-    fun handleLayoutMusic(action: Int) {
+    fun handleLayoutMusic(action: Int, song: Song?) {
         val myAnim = AnimationUtils.loadAnimation(this, R.anim.rotate_indefinitely)
         imgSong.startAnimation(myAnim)
-         when (action) {
+        when (action) {
             ACTION_START -> {
                 setStatusButtonPlayOrPause()
-             }
+            }
             ACTION_PAUSE -> {
                 setStatusButtonPlayOrPause()
-                myAnim.cancel()
                 myAnim.cancel()
             }
             ACTION_RESUME -> {
                 setStatusButtonPlayOrPause()
                 myAnim.start()
+            }
+            ACTION_CLEAR -> {
+                mediaPlayer?.release()
+                mediaPlayer = null
+                myAnim.cancel()
+                setTime("0:00", "0:00")
+//                val intent = Intent(this, MyService::class.java)
+//                val bundle = Bundle()
+//                bundle.putSerializable(OBJECT_SONG, song)
+//                intent.putExtras(bundle)
+//                startService(intent)
             }
         }
     }
@@ -193,10 +204,4 @@ class MainActivity : AppCompatActivity() {
         intent.putExtra(ServiceKey.ACTION_MUSIC_SERVICE, action)
         startService(intent)
     }
-
-//    override fun onBackPressed() {
-//        super.onBackPressed()
-//        startActivity(Intent(this,ListSongActivity::class.java))
-//    }
-
 }

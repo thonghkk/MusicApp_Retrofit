@@ -1,4 +1,4 @@
-package com.example.retrofit_musicapp.ui.listsong
+package com.example.retrofit_musicapp.ui.list_song
 
 import android.content.Intent
 import android.os.Bundle
@@ -30,7 +30,6 @@ class ListSongAdapter(private val sounds: List<Song>) :
 
         fun binds(song: Song) {
             val urlImage = song.urlImage
-            val urlSong = song.urlSong
             Glide.with(itemView).load(urlImage)
                 .apply(RequestOptions.circleCropTransform())
                 .into(mImage)
@@ -47,7 +46,6 @@ class ListSongAdapter(private val sounds: List<Song>) :
                 itemView.context.startService(intent)
                 Log.d("idSong", "binds: ${song.idSong}")
             }
-
         }
     }
 
@@ -61,6 +59,4 @@ class ListSongAdapter(private val sounds: List<Song>) :
     }
 
     override fun getItemCount() = sounds.size
-
-
 }

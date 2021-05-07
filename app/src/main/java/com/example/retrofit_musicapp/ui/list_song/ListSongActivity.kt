@@ -1,7 +1,5 @@
-package com.example.retrofit_musicapp.ui.listsong
+package com.example.retrofit_musicapp.ui.list_song
 
-import android.animation.Animator
-import android.animation.AnimatorInflater
 import android.animation.ObjectAnimator
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -11,7 +9,6 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.view.animation.AnimationUtils
 import android.widget.*
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -19,13 +16,12 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.example.retrofit_musicapp.ui.MainActivity
+import com.example.retrofit_musicapp.ui.PlayMusicActivity
 import com.example.retrofit_musicapp.R
+import com.example.retrofit_musicapp.common.ServiceKey.Companion.ACTION_CLEAR
 import com.example.retrofit_musicapp.common.ServiceKey.Companion.ACTION_MUSIC
 import com.example.retrofit_musicapp.common.ServiceKey.Companion.ACTION_MUSIC_SERVICE
-import com.example.retrofit_musicapp.common.ServiceKey.Companion.ACTION_NEXT_MUSIC
 import com.example.retrofit_musicapp.common.ServiceKey.Companion.ACTION_PAUSE
-import com.example.retrofit_musicapp.common.ServiceKey.Companion.ACTION_PREV_MUSIC
 import com.example.retrofit_musicapp.common.ServiceKey.Companion.ACTION_RESUME
 import com.example.retrofit_musicapp.common.ServiceKey.Companion.ACTION_START
 import com.example.retrofit_musicapp.common.ServiceKey.Companion.OBJECT_SONG
@@ -104,6 +100,11 @@ class ListSongActivity : AppCompatActivity() {
                 x.resume()
                 setStatusButtonPlayOrPause()
             }
+            ACTION_CLEAR->{
+                mLayoutBottom.visibility = View.GONE
+                mediaPlayer?.release()
+                mediaPlayer = null
+            }
 //            ACTION_NEXT_MUSIC -> nextMusic(action)
 //            ACTION_PREV_MUSIC -> prevMusic(action)
         }
@@ -154,7 +155,7 @@ class ListSongActivity : AppCompatActivity() {
         }
 
         mLayoutBottom.setOnClickListener {
-            val intent = Intent(this, MainActivity::class.java)
+            val intent = Intent(this, PlayMusicActivity::class.java)
             val bundle = Bundle().apply {
                 putSerializable(OBJECT_SONG, mSong)
                 putBoolean(STATUS_PLAYER, isPlaying)

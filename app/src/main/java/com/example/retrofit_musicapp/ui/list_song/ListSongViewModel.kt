@@ -1,4 +1,4 @@
-package com.example.retrofit_musicapp.ui.listsong
+package com.example.retrofit_musicapp.ui.list_song
 
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
