@@ -43,6 +43,7 @@ open class MyService : Service() {
     companion object {
         var mediaPlayer: MediaPlayer? = null
     }
+
     private var isPlaying = true
     private var mSong: Song? = null
 
@@ -67,7 +68,7 @@ open class MyService : Service() {
         if (song != null) {
             mSong = song
             //sendNotification(mSong, actionMusic)
-            notificationChannel(mSong,actionMusic)
+            notificationChannel(mSong, actionMusic)
             startMusic(mSong)
         }
 
@@ -103,7 +104,7 @@ open class MyService : Service() {
             mediaPlayer?.pause()
             isPlaying = false
             //sendNotification(mSong, action)
-            notificationChannel(mSong,action)
+            notificationChannel(mSong, action)
             sendActionToActivity(ACTION_PAUSE)
         }
     }
@@ -113,7 +114,7 @@ open class MyService : Service() {
             mediaPlayer?.start()
             isPlaying = true
             //sendNotification(mSong, action)
-            notificationChannel(mSong,action)
+            notificationChannel(mSong, action)
             sendActionToActivity(ACTION_RESUME)
         }
     }
@@ -122,7 +123,7 @@ open class MyService : Service() {
         stopSelf()
         isPlaying = false
         sendActionToActivity(ACTION_CLEAR)
-        sendNotification(mSong,action)
+        sendNotification(mSong, action)
     }
 
     private fun sendNotification(song: Song?, action: Int) {
@@ -215,30 +216,7 @@ open class MyService : Service() {
 
     }
 
-    private fun getBitmapFromURL(src: String): Bitmap? {
-        return try {
-            val url = URL(src)
-            val connection:HttpURLConnection  = url.openConnection() as HttpURLConnection
-            connection.doInput = true
-            connection.connect()
-            val input: InputStream = connection.inputStream
-            BitmapFactory.decodeStream(input)
-        } catch (e: Exception) {
-            Log.d("url image", "notificationChannel: ${ e.printStackTrace()}")
-            null
-        }
-    }
-
-    private fun convertUrlToBitmap(src:String):Bitmap?{
-        return try {
-            val url:URL = URL(src)
-            BitmapFactory.decodeStream(url.openConnection().getInputStream())
-        }catch (e:Exception){
-            null
-        }
-    }
-
-    private fun notificationChannel(song: Song?,action: Int) {
+    private fun notificationChannel(song: Song?, action: Int) {
         //handle when user click on notification move to main activity
         val intent = Intent(this, PlayMusicActivity::class.java)
         val bundle = Bundle().apply {
@@ -249,25 +227,34 @@ open class MyService : Service() {
         intent.putExtras(bundle)
         val pendingIntent =
             PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
-
         val mediaSessionCompat = MediaSessionCompat(this, "tag")
-
-        val bitmap = convertUrlToBitmap("https://data.chiasenhac.com/data/cover/86/85720.jpg")
-        Log.d("url image", "notificationChannel: ${song?.urlImage!!} and $bitmap")
 
         //create notification
         val notificationBuilder = NotificationCompat.Builder(this, CHANNEL_ID)
             .setSmallIcon(R.drawable.ic_notification)
-            .setContentTitle(song.nameSound)
+            .setContentTitle(song?.nameSound!!)
             .setContentText(song.singer)
-            .setLargeIcon(bitmap)
             .setContentIntent(pendingIntent)
+            .setSubText(song.nameSound)
             //set action
             .setStyle(
                 androidx.media.app.NotificationCompat.MediaStyle()
                     .setShowActionsInCompactView(0, 1, 2)
                     .setMediaSession(mediaSessionCompat.sessionToken)
             )
+
+        //launch image on notification
+        Glide.with(this)
+            .asBitmap()
+            .load(song.urlImage)
+            .fitCenter()
+            .into(object : CustomTarget<Bitmap>(100, 100) {
+                override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
+                    notificationBuilder.setLargeIcon(resource)
+                }
+                override fun onLoadCleared(placeholder: Drawable?) {
+                }
+            })
 
         //catch event click of user
         if (isPlaying) {
