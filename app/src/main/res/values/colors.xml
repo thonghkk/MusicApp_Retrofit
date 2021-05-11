@@ -9,5 +9,6 @@
     <color name="white">#FFFFFFFF</color>
     <color name="black_">#63686e</color>
     <color name="white_x">#e3e3e3</color>
+    <color name="trans">#00000000</color>
 
 </resources>

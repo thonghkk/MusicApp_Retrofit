@@ -8,10 +8,46 @@
     android:weightSum="100"
     tools:context=".ui.list_song.ListSongActivity">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/mRecycleView"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:weightSum="100">
+
+        <SearchView
+            android:id="@+id/mSearchView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20sp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/bg_search_view" />
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp">
+
+            <com.denzcoskun.imageslider.ImageSlider
+                android:id="@+id/mImageSlider"
+                android:layout_width="match_parent"
+                android:layout_height="150dp"
+                android:gravity="center"
+                app:iss_auto_cycle="true"
+                app:iss_delay="2000"
+                app:iss_error_image="@drawable/error"
+                app:iss_period="2000"
+                app:iss_placeholder="@drawable/placeholder"
+                app:iss_title_background="@color/trans" />
+
+        </androidx.cardview.widget.CardView>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/mRecycleView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </LinearLayout>
+
 
     <LinearLayout
         android:id="@+id/mLayoutBottom"
@@ -83,8 +119,9 @@
                 android:layout_height="match_parent"
                 android:layout_marginEnd="10dp"
                 android:layout_toStartOf="@id/imgPlayOrPause"
+                android:contentDescription="TODO"
                 android:src="@drawable/ic_skip_back"
-                android:contentDescription="TODO" />
+                tools:ignore="ContentDescription" />
 
             <ImageView
                 android:id="@+id/imgPlayOrPause"
@@ -93,8 +130,9 @@
                 android:layout_centerVertical="true"
                 android:layout_marginEnd="10dp"
                 android:layout_toStartOf="@id/imgClear"
+                android:contentDescription="TODO"
                 android:src="@drawable/ic_play"
-                android:contentDescription="TODO" />
+                tools:ignore="ContentDescription" />
 
             <ImageView
                 android:id="@+id/imgClear"
@@ -102,8 +140,9 @@
                 android:layout_height="match_parent"
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
+                android:contentDescription="TODO"
                 android:src="@drawable/ic_skip_next"
-                android:contentDescription="TODO" />
+                tools:ignore="ContentDescription" />
 
         </RelativeLayout>
     </LinearLayout>
