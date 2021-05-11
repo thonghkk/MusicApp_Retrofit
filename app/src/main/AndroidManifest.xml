@@ -9,14 +9,12 @@
     <application
         android:name=".common.CheckVersion"
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/ic_logo_"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Retrofit_MusicApp">
-        <activity
-            android:name="com.example.retrofit_musicapp.ui.list_song.ListSongActivity"
-            android:theme="@style/NoActionBar">
+        <activity android:name=".ui.SplashActivity" android:theme="@style/NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -24,10 +22,16 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".ui.list_song.ListSongActivity"
+            android:theme="@style/NoActionBar" />
+
+        <activity
             android:name=".ui.PlayMusicActivity"
             android:theme="@style/NoActionBar" />
 
         <service android:name=".service.MyService" />
+
         <receiver android:name=".service.MyReceiver" />
     </application>
+
 </manifest>
