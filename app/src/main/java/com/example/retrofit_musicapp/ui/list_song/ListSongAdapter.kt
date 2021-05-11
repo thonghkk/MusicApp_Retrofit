@@ -6,9 +6,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.TextView
+import android.widget.*
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
@@ -18,8 +16,10 @@ import com.example.retrofit_musicapp.model.Song
 import com.example.retrofit_musicapp.service.MyService
 import com.example.retrofit_musicapp.service.MyService.Companion.mediaPlayer
 
-class ListSongAdapter(private val sounds: List<Song>) :
-    RecyclerView.Adapter<ListSongAdapter.ViewHolder>() {
+class ListSongAdapter(private var sounds: List<Song>) :
+    RecyclerView.Adapter<ListSongAdapter.ViewHolder>(), Filterable {
+
+    private val soundsOld: List<Song> = sounds
 
     class ViewHolder(soundView: View) : RecyclerView.ViewHolder(soundView) {
 
@@ -59,4 +59,31 @@ class ListSongAdapter(private val sounds: List<Song>) :
     }
 
     override fun getItemCount() = sounds.size
+    override fun getFilter(): Filter {
+        return object : Filter() {
+            override fun performFiltering(constraint: CharSequence?): FilterResults {
+                val strSearch = constraint.toString()
+                sounds = if (strSearch.isEmpty()) {
+                    soundsOld
+                } else {
+                    val newList = mutableListOf<Song>()
+                    for (i in soundsOld) {
+                        if (i.nameSound.toLowerCase().contains(strSearch.toLowerCase())) {
+                            newList.add(i)
+                        }
+                    }
+                    newList
+                }
+                val filterResult = FilterResults()
+                filterResult.values = sounds
+                return filterResult
+            }
+
+            override fun publishResults(constraint: CharSequence?, results: FilterResults?) {
+                sounds = results?.values as List<Song>
+                notifyDataSetChanged()
+            }
+
+        }
+    }
 }

@@ -29,7 +29,6 @@ import com.example.retrofit_musicapp.common.ServiceKey.Companion.STATUS_PLAYER
 import com.example.retrofit_musicapp.model.Song
 import com.example.retrofit_musicapp.service.MyService
 import com.example.retrofit_musicapp.service.MyService.Companion.mediaPlayer
-import com.example.retrofit_musicapp.ui.list_song.ListSongActivity
 
 class PlayMusicActivity : AppCompatActivity() {
 
@@ -187,7 +186,7 @@ class PlayMusicActivity : AppCompatActivity() {
 //                bundle.putSerializable(OBJECT_SONG, song)
 //                intent.putExtras(bundle)
 //                startService(intent)
-               onBackPressed()
+//               onBackPressed()
             }
         }
     }

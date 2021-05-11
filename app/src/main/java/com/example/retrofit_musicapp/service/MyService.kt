@@ -5,7 +5,6 @@ import android.app.Service
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.graphics.drawable.Drawable
 import android.media.AudioAttributes
 import android.media.MediaPlayer
@@ -19,7 +18,6 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
-import com.example.retrofit_musicapp.ui.PlayMusicActivity
 import com.example.retrofit_musicapp.R
 import com.example.retrofit_musicapp.common.ServiceKey.Companion.ACTION_CLEAR
 import com.example.retrofit_musicapp.common.ServiceKey.Companion.ACTION_MUSIC
@@ -34,10 +32,7 @@ import com.example.retrofit_musicapp.common.ServiceKey.Companion.OBJECT_SONG
 import com.example.retrofit_musicapp.common.ServiceKey.Companion.SEND_DATA_TO_ACTIVITY
 import com.example.retrofit_musicapp.common.ServiceKey.Companion.STATUS_PLAYER
 import com.example.retrofit_musicapp.model.Song
-import java.io.InputStream
-import java.lang.Exception
-import java.net.HttpURLConnection
-import java.net.URL
+import com.example.retrofit_musicapp.ui.PlayMusicActivity
 
 open class MyService : Service() {
     companion object {
@@ -231,7 +226,7 @@ open class MyService : Service() {
 
         //create notification
         val notificationBuilder = NotificationCompat.Builder(this, CHANNEL_ID)
-            .setSmallIcon(R.drawable.ic_notification)
+            .setSmallIcon(R.drawable.ic_logo_)
             .setContentTitle(song?.nameSound!!)
             .setContentText(song.singer)
             .setContentIntent(pendingIntent)
