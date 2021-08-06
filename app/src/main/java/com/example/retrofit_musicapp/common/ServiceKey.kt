@@ -24,4 +24,5 @@ class ServiceKey {
 }
 class Check{
     val b = mutableListOf<String>()
+    val c = mutableListOf<String>()
 }
