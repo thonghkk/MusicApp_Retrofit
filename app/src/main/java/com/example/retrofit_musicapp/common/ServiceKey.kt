@@ -18,7 +18,5 @@ class ServiceKey {
         const val ACTION_PREV_MUSIC = 5
         const val ACTION_NEXT_MUSIC = 6
         const val ABC = 2
-        const val ABCD = 2
-
     }
 }
