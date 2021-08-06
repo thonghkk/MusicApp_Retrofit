@@ -11,6 +11,7 @@ class CheckVersion : Application() {
     override fun onCreate() {
         super.onCreate()
         createChannelNotification()
+        val c = 2
     }
 
     private fun createChannelNotification() {
